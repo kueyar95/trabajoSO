@@ -1,18 +1,28 @@
+#pragma once
+#include <string>
+using namespace std;
+
 class Hardware {
 	public:
-		Hardware(int capacidad, int velocidad, std::string tipo, std::string descripcion);
+		Hardware(int id, string tipo, string marca, string modelo, int capacidad, int velocidad);
 		int getCapacidad();
 		void setCapacidad(int capacidad);
 		int getVelocidad();
 		void setVelocidad(int velocidad);
-		std::string getTipo();
-		void setTipo(std::string tipo);
-		std::string getDescripcion();
-		void setDescripcion(std::string descripcion);
-
+		string getTipo();
+		void setTipo(string tipo);
+		void setModelo(string modelo);
+		string getModelo();
+		void setMarca(string marca);
+		string getMarca();
+		int getId();
+		void setId(int id);
 	private:
+		string tipo;
+		string modelo;
+		string marca;
+		int id;
 		int capacidad;
+		int almacenamiento;
 		int velocidad;
-		std::string tipo; // Tipo de hardware (por ejemplo, CPU, GPU, memoria, almacenamiento, etc.)
-		std::string descripcion; // Descripción de las especificaciones técnicas del hardware
 };
