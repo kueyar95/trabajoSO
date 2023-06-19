@@ -204,12 +204,11 @@ void menuHardware(){
 		cout<<"1. Crear nuevo hardware"<<endl;
 		cout<<"2. Cargar hardware creado"<<endl;
 		cout<<"3. Ver todo el hardware"<<endl;
-		cout<<"4. Ver hardware"<<endl;
+		cout<<"4. Eliminar hardware"<<endl;
 		cout<<"5. Eliminar todo el hardware"<<endl;
-		cout<<"6. Eliminar hardware"<<endl;
-		cout<<"7. Modificar hardware"<<endl;
-		cout<<"8. Atras"<<endl;
-		cout<<"9. Salir"<<endl;
+		cout<<"6. Modificar hardware"<<endl;
+		cout<<"7. Atras"<<endl;
+		cout<<"8. Salir"<<endl;
 		cout<<"Opcion: "<<endl;
 		cin>>opcion;
 		cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
@@ -227,7 +226,7 @@ void menuHardware(){
 				cin >> capacidad;
 				cout << "Ingrese la velocidad del hardware: ";
                 cin >> velocidad;
-                nuevoHardware = administradorHard.agregarHardware(tipo, marca, modelo, capacidad, velocidad);
+                nuevoHardware = administradorHard.agregarHardware(tipo, marca, modelo, capacidad, velocidad, false);
     			administradorHard.guardarHardware(nuevoHardware);
 				system("pause");
 				break;
@@ -240,31 +239,32 @@ void menuHardware(){
 				system("pause");
 			 	break;
 			case 4:
-				// verDetalleHardware();
-				// system("pause");
+				cout << "Ingrese el id del hardware que desea eliminar: ";
+				cin >> id;
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
+			 	administradorHard.eliminarHardware(id);
+				system("pause");
 				break;
 			 case 5:
-			 	cout << "Ingrese el id del hardware que desea eliminar: ";
-				cin >> id;
-			 	administradorHard.eliminarHardware(id);
+			 	cout << "Eliminando hardware...\n";
+			 	administradorHard.eliminarTodoHardware();
 				system("pause");
 			 	break;
 			 case 6:
-			 	// eliminarDetalleHardware();
-				// system("pause");
+			 	cout << "Ingrese el id del hardware que desea modificar: ";
+				cin >> id;
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
+			 	administradorHard.modificarHardware(id);
+				system("pause");
 			 	break;
 			 case 7:
-			 	// modificarHardware();
-				// system("pause");
-			 	break;
-			case 8:
-				menuGeneral();
+			 	menuGeneral();
 				system("pause");
-			break;
-			case 9:	break;
+			 	break;
+			case 8:	break;
 		}
 		system("cls");
-	} while (opcion < 9);
+	} while (opcion < 8);
 }
 void menuUsuarios(){
 	int opcion;
