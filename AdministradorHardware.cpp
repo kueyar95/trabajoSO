@@ -10,7 +10,31 @@
 
 
 using namespace std;
-AdministradorHardware::AdministradorHardware() {}
+
+AdministradorHardware::AdministradorHardware() {
+    cargarUltimoId();
+}
+
+void AdministradorHardware::guardarUltimoId() {
+    ofstream file("ultimoId.txt", ios::app);
+    file << "Hardware," << ultimoId << "\n";
+    file.close();
+}
+
+void AdministradorHardware::cargarUltimoId() {
+    ifstream file("ultimoId.txt");
+    string line, tipo;
+    int id;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        getline(ss, tipo, ',');
+        ss >> id;
+        if (tipo == "Hardware") {
+            ultimoId = id;
+        }
+    }
+    file.close();
+}
 Hardware* AdministradorHardware::agregarHardware(string tipo, string nombre, string marca, int capacidad, int velocidad, bool cargadoDesdeArchivo = false) {
     int id;
     if (cargadoDesdeArchivo) {

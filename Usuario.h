@@ -1,13 +1,20 @@
+#include <string>
+using namespace std;
+
 class Usuario {
 public:
-    Usuario(std::string nombre, std::string tipo);
-    std::string getNombre();
-    void setNombre(std::string nombre);
-    std::string getTipo();
-    void setTipo(std::string tipo);
-	void realizarSolicitud(Sistema* sistema, int recursosRequeridos);
+    Usuario(int id, string nombre, string tipo, int nivelAcceso);
+    int getId();
+    string getNombre();
+    void setNombre(string nombre);
+    string getTipo();
+    void setTipo(string tipo);
+    int getNivelAcceso();
+    void setNivelAcceso(int nivelAcceso);
 
 private:
-    std::string nombre; // Nombre del usuario
-    std::string tipo; // Tipo de usuario (por ejemplo, humano, sistema, etc.)
+    int id; // ID del usuario
+    string nombre; // Nombre del usuario
+    string tipo; // Tipo de usuario (por ejemplo, humano, sistema, etc.)
+    int nivelAcceso; // Nivel de acceso o privilegios del usuario
 };

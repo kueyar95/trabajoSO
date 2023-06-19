@@ -17,6 +17,8 @@ class AdministradorHardware {
 		void eliminarHardware(int id);
 		void eliminarTodoHardware();
 		void modificarHardware(int id);
+		void guardarUltimoId();
+		void cargarUltimoId();
 		// Otros métodos según sea necesario
 	private:
 		vector<Hardware*> hardwareList;
