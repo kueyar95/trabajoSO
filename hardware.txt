@@ -1,0 +1,28 @@
+1,Procesador,Intel,i5,2500
+2,Procesador,AMD,Ryzen5,3000
+3,Procesador,Intel,Pentium,2200
+4,Procesador,AMD,Ryzen7,3200
+5,Procesador,Intel,i3,2800
+6,Procesador,AMD,Ryzen9,3500
+7,Procesador,Intel,i5,2400
+8,Procesador,AMD,Ryzen5,3300
+9,Procesador,Intel,i5,2600
+10,Procesador,AMD,Ryzen7,3100
+11,RAM Corsair,DDR4,8000,2666
+12,RAM Kingston,HyperX Fury,1600,3000
+13,RAM G.Skill,TridentZ,3200,3200
+14,RAM Crucial,BallistixSport,8000,1600
+15,RAM Corsair,VengeancePro,16000,1866
+16,RAM Kingston,ValueRAM,4000,2133
+17,RAM Patriot,ViperSteel,8000,2400
+18,RAM G.Skill,RipjawsX,16000,2133
+19,RAM,Corsair,DominatorPlatinum,32000,3600
+20,RAM Crucial,DDR3,4000,1333
+21,Almacenamiento,Samsung,SSD,256,2050
+22,Almacenamiento,Crucial,SSD,512,560
+23,Almacenamiento,WesternDigital,SSD,1000,2400
+24,Almacenamiento,SeagateBarracuda,DiscoMecanico,1000,7200
+25,Almacenamiento,WesternDigital,DiscoMecanico,2000,5400
+26,Almacenamiento,Kingston,SSD,128,550
+27,Almacenamiento,Samsung,SSD,2000,7000
+28,Almacenamiento,Toshiba,DiscoMecanico,500,7200
