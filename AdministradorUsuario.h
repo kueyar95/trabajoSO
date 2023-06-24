@@ -13,10 +13,13 @@ public:
     void guardarUsuario(Usuario* usuario);
     void cargarUsuarios();
     void verUsuarios();
+    Usuario* buscarUsuario(string nombreUsuario);
     void eliminarUsuario(int id);
     void modificarUsuario(int id);
 	void guardarUltimoId();
 	void cargarUltimoId();
+    string generarNombreAleatorio(int longitud);
+    void agregarUsuariosAleatorios(int cantidad);
 
 private:
     vector<Usuario*> usuarios;

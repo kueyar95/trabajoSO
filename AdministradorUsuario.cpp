@@ -5,6 +5,7 @@
 #include<fstream>
 #include<iostream>
 #include<sstream>
+#include <random>
 using namespace std;
 
 AdministradorUsuario::AdministradorUsuario() {
@@ -74,6 +75,15 @@ void AdministradorUsuario::verUsuarios() {
     }
 }
 
+Usuario* AdministradorUsuario::buscarUsuario(string nombreUsuario){
+    for (Usuario* usuario : usuarios) {
+        if (usuario->getNombre() == nombreUsuario) {
+            return usuario;
+        }
+    }
+    return nullptr;  // Devuelve nullptr si no se encuentra el usuario
+}
+
 void AdministradorUsuario::eliminarUsuario(int id) {
     for (auto it = usuarios.begin(); it != usuarios.end(); ++it) {
         if ((*it)->getId() == id) {
@@ -107,5 +117,32 @@ void AdministradorUsuario::modificarUsuario(int id) {
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
             break;
         }
+    }
+}
+
+string AdministradorUsuario::generarNombreAleatorio(int longitud) {
+    static const char alphanumerico[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, sizeof(alphanumerico) - 2);
+
+    std::string nombre;
+    for (int i = 0; i < longitud; ++i) {
+        nombre += alphanumerico[dis(gen)];
+    }
+
+    return nombre;
+}
+
+void AdministradorUsuario::agregarUsuariosAleatorios(int cantidad) {
+    for (int i = 0; i < cantidad; ++i) {
+        std::string nombre = generarNombreAleatorio(10); // Genera un nombre de 10 caracteres
+        std::string tipo = "Tipo" + std::to_string(i % 5); // Genera tipos de usuario aleatorios
+        int nivelAcceso = i % 3; // Genera niveles de acceso aleatorios
+        agregarUsuario(nombre, tipo, nivelAcceso);
     }
 }

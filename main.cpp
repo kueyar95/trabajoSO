@@ -7,16 +7,21 @@
 #include <limits>
 #include<fstream>
 #include "AdministradorHardware.h"
+#include "AdministradorUsuario.h"
 using namespace std;
 
 void menuGeneral();
+void menuGeneralSuperUsuario();
+void menuGeneralAdministrador();
+void menuGeneralUsuario();
+void menuGeneralVisita();
 void menuEntidades();
 void menuSistemas();
 void menuHardware();
 void menuUsuarios();
 void reiniciar();
 void imprimirLog();
-void inicioRapido();
+int iniciarSesion();
 void mostrarPanelControl();
 
 int main()
@@ -24,7 +29,72 @@ int main()
 	menuGeneral();
 	return 0;
 }
+
+int iniciarSesion() {
+    AdministradorUsuario adminUsuario;
+    adminUsuario.cargarUsuarios();
+
+    while (true) {
+        cout << "Por favor, ingrese su nombre de usuario (presione enter para continuar como invitado): ";
+        string nombreUsuario;
+        getline(cin, nombreUsuario);
+
+        Usuario* usuario;
+        if (nombreUsuario.empty()) {
+            usuario = new Usuario(0, "Invitado", "Usuario", 0);
+            return usuario->getNivelAcceso();
+        } else {
+            usuario = adminUsuario.buscarUsuario(nombreUsuario);
+            if (usuario == nullptr) {
+                cout << "Usuario no encontrado." << endl;
+                cout << "1. Intentar de nuevo" << endl;
+                cout << "2. Continuar como invitado" << endl;
+                cout << "3. Salir" << endl;
+                cout << "Opcion: ";
+                int opcion;
+                cin >> opcion;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiar el buffer de entrada
+
+                switch (opcion) {
+                    case 1:
+                        continue;
+                    case 2:
+                        usuario = new Usuario(0, "Invitado", "Usuario", 0);
+                        return usuario->getNivelAcceso();
+                    case 3:
+                        exit(1);
+                    default:
+                        cout << "Opcion no reconocida. Saliendo del programa." << endl;
+                        exit(1);
+                }
+            } else {
+                return usuario->getNivelAcceso();
+            }
+        }
+    }
+}
+
 void menuGeneral(){
+	int nivelAcceso = iniciarSesion();
+	switch (nivelAcceso) {
+		case 0:
+			menuGeneralVisita();
+			break;
+		case 1:
+			menuGeneralUsuario();
+			break;
+		case 2:
+			menuGeneralAdministrador();
+			break;
+		case 3:
+			menuGeneralSuperUsuario();
+			break;
+		default:
+			cout << "Nivel de acceso no reconocido. Saliendo del programa." << endl;
+			exit(1);
+	}
+}
+void menuGeneralSuperUsuario(){
 	int opcion, dato, contador = 0;
 	char rpt;
 	do
@@ -80,7 +150,63 @@ void menuGeneral(){
 		// system("cls");
 	} while (opcion < 9);
 }
+void menuGeneralAdministrador(){
+	int opcion, dato, contador = 0;
+	char rpt;
+	do
+	{
+		cout<<"\n\t.:MENU GENERAL:. \n";
+		cout<<"1. Administrar Entidad"<<endl;
+		cout<<"2. Administrar Sistema"<<endl;
+		cout<<"3. Administrar Hardware"<<endl;
+		cout<<"4. Administrar Usuarios"<<endl;
+		cout<<"5. Programar Eventos"<<endl;
+		cout<<"6. Salir"<<endl;
+		cout<<"Opcion: "<<endl;
+		cin>>opcion;
 
+		switch (opcion)
+		{
+			case 1:
+				// menuEntidades();
+				// system("pause");
+				break;
+			 case 2:
+				// menuSistemas();
+			 	// system("pause");
+			 	break;
+			 case 3:
+			 	menuHardware();
+				system("pause");
+			 	break;
+			case 4:
+				// menuUsuarios();
+				// system("pause");
+				break;
+			case 5:
+			 	// reiniciar();
+				// system("pause");
+			 	break;
+			case 6:	break;
+		}
+		// system("cls");
+	} while (opcion < 6);
+}
+void menuGeneralUsuario(){
+	int opcion;
+    do
+    {
+        cout<<"\n\t.:MENU USUARIO:. \n";
+        cout<<"1. Acceder a Sistema de Pagos"<<endl;
+        cout<<"2. Acceder a Sistema de Recaudación de Impuestos"<<endl;
+        cout<<"3. Acceder a Sistema de Banca"<<endl;
+        cout<<"4. Salir"<<endl;
+        cout<<"Opcion: "<<endl;
+        cin>>opcion;
+        // Aquí va el código para manejar las opciones
+    } while (opcion != 4);
+}
+void menuGeneralVisita(){}
 void menuEntidades(){
 	int opcion;
 	do
