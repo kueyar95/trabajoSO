@@ -106,7 +106,7 @@ void menuGeneralSuperUsuario(){
 		cout<<"4. Administrar Usuarios"<<endl;
 		cout<<"5. Reiniciar"<<endl;
 		cout<<"6. Log"<<endl;
-		cout<<"7. Inicio Rápido"<<endl;
+		cout<<"7. Inicio Rapido"<<endl;
 		cout<<"8. Visualizar Panel de Control"<<endl;
 		cout<<"9. Salir"<<endl;
 		cout<<"Opcion: "<<endl;
@@ -127,8 +127,8 @@ void menuGeneralSuperUsuario(){
 				system("pause");
 			 	break;
 			case 4:
-				// menuUsuarios();
-				// system("pause");
+				menuUsuarios();
+			 	system("pause");
 				break;
 			 case 5:
 			 	// reiniciar();
@@ -155,7 +155,7 @@ void menuGeneralAdministrador(){
 	char rpt;
 	do
 	{
-		cout<<"\n\t.:MENU GENERAL:. \n";
+		cout<<"\n\t.:MENU ADMINISTRADOR:. \n";
 		cout<<"1. Administrar Entidad"<<endl;
 		cout<<"2. Administrar Sistema"<<endl;
 		cout<<"3. Administrar Hardware"<<endl;
@@ -393,58 +393,74 @@ void menuHardware(){
 	} while (opcion < 8);
 }
 void menuUsuarios(){
-	int opcion;
+	AdministradorUsuario admUsuario;
+	int opcion, dato, nivelAcceso;
+	string nombre, tipo;
 	do
 	{
-		// cout<<"\n\t.:MENU USUARIOS:. \n";
-		// cout<<"1. Creacion rapida de usuario"<<endl;
-		// cout<<"2. Crear nuevo usuario"<<endl;
-		// cout<<"3. Ver todos los usuarios"<<endl;
-		// cout<<"4. Ver usuario"<<endl;
-		// cout<<"5. Eliminar todos los usuarios"<<endl;
-		// cout<<"6. Eliminar usuario"<<endl;
-		// cout<<"7. Modificar usuario"<<endl;
-		// cout<<"8. Atras"<<endl;
-		// cout<<"9. Salir"<<endl;
-		// cout<<"Opcion: "<<endl;
-		// cin>>opcion;
+		cout<<"\n\t.:MENU USUARIOS:. \n";
+		cout<<"1. Creacion rapida de usuario"<<endl;
+		cout<<"2. Crear nuevo usuario"<<endl;
+		cout<<"3. Ver todos los usuarios"<<endl;
+		cout<<"4. Ver usuario"<<endl;
+		cout<<"5. Eliminar todos los usuarios"<<endl;
+		cout<<"6. Eliminar usuario"<<endl;
+		cout<<"7. Modificar usuario"<<endl;
+		cout<<"8. Atras"<<endl;
+		cout<<"9. Salir"<<endl;
+		cout<<"Opcion: "<<endl;
+		cin>>opcion;
 
-		// switch (opcion)
-		// {
-		// 	case 1:
-		// 		creacionRapidoUsuario();
-		// 		system("pause");
-		// 		break;
-		// 	 case 2:
-		// 		crearUsuario();
-		// 	 	system("pause");
-		// 	 	break;
-		// 	 case 3:
-		// 	 	verUsuarios();
-		// 		system("pause");
-		// 	 	break;
-		// 	case 4:
-		// 		verUsuario();
-		// 		system("pause");
-		// 		break;
-		// 	 case 5:
-		// 	 	eliminarUsuarios();
-		// 		system("pause");
-		// 	 	break;
-		// 	 case 6:
-		// 	 	eliminarUsuario();
-		// 		system("pause");
-		// 	 	break;
-		// 	 case 7:
-		// 	 	modificarUsuario();
-		// 		system("pause");
-		// 	 	break;
-		// 	case 8:
-		// 		menuGeneral();
-		// 		system("pause");
-		// 	break;
-		// 	case 9:	break;
-		// }
-		// system("cls");
+		switch (opcion)
+		{
+			case 1:
+				cout<<"Ingrese cantidad de usuarios que desea crear: "<<endl;
+				cin >> dato;
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
+				admUsuario.creacionRapidoUsuario(dato);
+				system("pause");
+				break;
+			 case 2:
+			 	cout<<"Ingrese el nombre del usuario: "<<endl;
+				getline(cin, nombre);
+			 	cout<<"Ingrese el tipo de usuario: "<<endl;
+			 	cout<<"Ingrese el nivel de acceso del usuario: "<<endl;
+				cin >>nivelAcceso;
+				admUsuario.agregarUsuario(nombre, tipo, nivelAcceso, false);
+			 	system("pause");
+			 	break;
+			 case 3:
+			 	admUsuario.verUsuarios();
+				system("pause");
+			 	break;
+			case 4:
+				cout<<"Ingrese el nombre del usuario: "<<endl;
+				getline(cin, nombre);
+				admUsuario.buscarUsuario(nombre);
+				system("pause");
+				break;
+			 case 5:
+			 	admUsuario.eliminarTodosUsuarios();
+				system("pause");
+			 	break;
+			 case 6:
+			 	cout<<"Ingrese el nombre del usuario a eliminar: "<<endl;
+				cin>>dato;
+			 	admUsuario.eliminarUsuario(dato);
+				system("pause");
+			 	break;
+			 case 7:
+			 	cout<<"Ingrese el nombre del usuario a modificar: "<<endl;
+				cin>>dato;
+			 	admUsuario.modificarUsuario(dato);
+				system("pause");
+			 	break;
+			case 8:
+				menuGeneral();
+				system("pause");
+			break;
+			case 9:	break;
+		}
+		system("cls");
 	} while (opcion < 9);
 }

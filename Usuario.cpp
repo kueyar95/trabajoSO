@@ -3,9 +3,6 @@
 using namespace std;
 
 
-Usuario::Usuario(int id, string nombre, string tipo, int nivelAcceso)
-    : id(id), nombre(nombre), tipo(tipo), nivelAcceso(nivelAcceso) {}
-
 int Usuario::getId() {
     return id;
 }

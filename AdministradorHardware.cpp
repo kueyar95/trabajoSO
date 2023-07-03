@@ -1,13 +1,11 @@
-#include <string>
-#include "Hardware.h"
-#include "AdministradorHardware.h"
-#include 	<iomanip>
+#include<string>
+#include"Hardware.h"
+#include"AdministradorHardware.h"
+#include<iomanip>
 #include<vector>
 #include<fstream>
 #include<iostream>
 #include<sstream>
-
-
 
 using namespace std;
 

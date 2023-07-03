@@ -3,7 +3,8 @@ using namespace std;
 
 class Usuario {
 public:
-    Usuario(int id, string nombre, string tipo, int nivelAcceso) : nivelAcceso(nivelAcceso), nombre(nombre) {}
+    Usuario(int id, string nombre, string tipo, int nivelAcceso)
+            : id(id), nombre(nombre), tipo(tipo), nivelAcceso(nivelAcceso) {}
     int getId();
     string getNombre();
     void setNombre(string nombre);

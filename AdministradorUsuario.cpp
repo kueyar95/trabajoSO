@@ -13,9 +13,30 @@ AdministradorUsuario::AdministradorUsuario() {
 }
 
 void AdministradorUsuario::guardarUltimoId() {
-    ofstream file("ultimoId.txt", ios::app);
-    file << "Usuario," << ultimoId << "\n";
-    file.close();
+    vector<string> lines;
+    string line, tipo;
+    int id;
+
+    // Leer el archivo y guardar todas las líneas en un vector
+    ifstream fileRead("ultimoId.txt");
+    while (getline(fileRead, line)) {
+        stringstream ss(line);
+        getline(ss, tipo, ',');
+        ss >> id;
+        if (tipo == "Usuario") {
+            // Reemplazar la línea que corresponde al tipo de ID que estás actualizando
+            line = "Usuario," + to_string(ultimoId);
+        }
+        lines.push_back(line);
+    }
+    fileRead.close();
+
+    // Sobrescribir el archivo con las líneas actualizadas
+    ofstream fileWrite("ultimoId.txt", ios::out);
+    for (const string& line : lines) {
+        fileWrite << line << "\n";
+    }
+    fileWrite.close();
 }
 
 void AdministradorUsuario::cargarUltimoId() {
@@ -32,10 +53,21 @@ void AdministradorUsuario::cargarUltimoId() {
     }
     file.close();
 }
-Usuario* AdministradorUsuario::agregarUsuario(string nombre, string tipo, int nivelAcceso) {
-    ultimoId++;
-    Usuario* nuevoUsuario = new Usuario(ultimoId, nombre, tipo, nivelAcceso);
-    usuarios.push_back(nuevoUsuario);
+Usuario* AdministradorUsuario::agregarUsuario(string nombre, string tipo, int nivelAcceso, bool cargadoDesdeArchivo = false) {
+    int id;
+    if (cargadoDesdeArchivo) {
+        // Si el usuario está siendo cargado desde un archivo, usa el último ID que ya has leído
+        id = ultimoId;
+    } else {
+        // Si el usuario no está siendo cargado desde un archivo, incrementa el último ID y guárdalo
+        ultimoId++;
+        id = ultimoId;
+        guardarUltimoId();
+    }
+
+    // Crear el nuevo usuario con el ID correcto
+    Usuario* nuevoUsuario = new Usuario(id, nombre, tipo, nivelAcceso);
+    usuariosList.push_back(nuevoUsuario);
     return nuevoUsuario;
 }
 
@@ -58,7 +90,7 @@ void AdministradorUsuario::cargarUsuarios() {
         getline(ss, nombre, ',');
         getline(ss, tipo, ',');
         ss >> nivelAcceso;
-        agregarUsuario(nombre, tipo, nivelAcceso);
+        agregarUsuario(nombre, tipo, nivelAcceso, true);
         if (id > ultimoId) {
             ultimoId = id;
         }
@@ -70,13 +102,13 @@ void AdministradorUsuario::cargarUsuarios() {
 void AdministradorUsuario::verUsuarios() {
     cout<< left << setw(5) << "ID" << setw(15) << "Nombre" << setw(15) << "Tipo" << setw(15) << "Nivel de Acceso" << "\n";
     cout<< "------------------------------------------------------------------------\n";
-    for (Usuario* usuario : usuarios) {
+    for (Usuario* usuario : usuariosList) {
         cout << left << setw(5) << usuario->getId() << setw(15) << usuario->getNombre() << setw(15) << usuario->getTipo() << setw(15) << usuario->getNivelAcceso() << "\n";
     }
 }
 
 Usuario* AdministradorUsuario::buscarUsuario(string nombreUsuario){
-    for (Usuario* usuario : usuarios) {
+    for (Usuario* usuario : usuariosList) {
         if (usuario->getNombre() == nombreUsuario) {
             return usuario;
         }
@@ -85,17 +117,32 @@ Usuario* AdministradorUsuario::buscarUsuario(string nombreUsuario){
 }
 
 void AdministradorUsuario::eliminarUsuario(int id) {
-    for (auto it = usuarios.begin(); it != usuarios.end(); ++it) {
+    for (auto it = usuariosList.begin(); it != usuariosList.end(); ++it) {
         if ((*it)->getId() == id) {
             delete *it;
-            usuarios.erase(it);
+            usuariosList.erase(it);
             break;
         }
     }
 }
 
+void AdministradorUsuario::eliminarTodosUsuarios() {
+    // Eliminar todos los elementos del vector
+    for (Usuario* U : usuariosList) {
+        delete U;
+    }
+    usuariosList.clear();
+
+    // Eliminar todo el contenido del archivo
+    ofstream file;
+    file.open("usuarios.txt", ofstream::out | ofstream::trunc);
+    file.close();
+
+    cout<<"Todos los usuarios han sido eliminados exitosamente"<<endl;
+}
+
 void AdministradorUsuario::modificarUsuario(int id) {
-    for (Usuario* usuario : usuarios) {
+    for (Usuario* usuario : usuariosList) {
         if (usuario->getId() == id) {
             string nuevoNombre, nuevoTipo;
             int nuevoNivelAcceso;
@@ -120,7 +167,7 @@ void AdministradorUsuario::modificarUsuario(int id) {
     }
 }
 
-string AdministradorUsuario::generarNombreAleatorio(int longitud) {
+string AdministradorUsuario::generarNombreAleatorio() {
     static const char alphanumerico[] =
         "0123456789"
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -131,18 +178,18 @@ string AdministradorUsuario::generarNombreAleatorio(int longitud) {
     std::uniform_int_distribution<> dis(0, sizeof(alphanumerico) - 2);
 
     std::string nombre;
-    for (int i = 0; i < longitud; ++i) {
+    for (int i = 0; i < 10; ++i) {
         nombre += alphanumerico[dis(gen)];
     }
 
     return nombre;
 }
 
-void AdministradorUsuario::agregarUsuariosAleatorios(int cantidad) {
+void AdministradorUsuario::creacionRapidoUsuario(int cantidad) {
     for (int i = 0; i < cantidad; ++i) {
-        std::string nombre = generarNombreAleatorio(10); // Genera un nombre de 10 caracteres
+        std::string nombre = generarNombreAleatorio(); // Genera un nombre de 10 caracteres
         std::string tipo = "Tipo" + std::to_string(i % 5); // Genera tipos de usuario aleatorios
-        int nivelAcceso = i % 3; // Genera niveles de acceso aleatorios
-        agregarUsuario(nombre, tipo, nivelAcceso);
+        int nivelAcceso = i % 2; // Genera niveles de acceso aleatorios
+        agregarUsuario(nombre, tipo, nivelAcceso, false);
     }
 }
