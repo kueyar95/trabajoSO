@@ -3,23 +3,31 @@
 #include "Proceso.h"
 
 class Sistema {
-public:
-    Sistema(std::string nombre, std::vector<Hardware*> hardware, std::vector<Usuario*> usuarios);
-    std::string getNombre();
-    void setNombre(std::string nombre);
-    std::vector<Hardware*> getHardware();
-    void setHardware(std::vector<Hardware*> hardware);
-    std::vector<Usuario*> getUsuarios();
-    void setUsuarios(std::vector<Usuario*> usuarios);
-    void agregarHardware(Hardware* hardware);
-    void eliminarHardware(Hardware* hardware);
-    void agregarUsuario(Usuario* usuario);
-    void eliminarUsuario(Usuario* usuario);
-	void agregarProceso(Proceso* proceso);
-    void eliminarProceso(Proceso* proceso);
-    // Otros métodos según sea necesario
-private:
-    std::string nombre; // Nombre del sistema
-    std::vector<Hardware*> hardware; // Lista de hardware asociado al sistema
-    std::vector<Usuario*> usuarios; // Lista de usuarios asociados al sistema
+    private:
+        int id; // Identificador único del sistema
+        string nombre; // Nombre del sistema
+        string tipo; // Tipo de sistema (Banca, Recaudación de impuestos, Sistemas de pago, Sistemas de minado, etc.)
+        bool estado; // Estado del sistema (activo o inactivo)
+        vector<Proceso*> procesos; // Lista de procesos que se están ejecutando en el sistema
+
+    public:
+        // Constructor
+        Sistema(int id, string nombre, string tipo) : id(id), nombre(nombre), tipo(tipo), estado(true) {}
+
+        // Getters
+        int getId();
+        string getNombre();
+        string getTipo();
+        bool getEstado();
+
+        // Setters
+        void setId(int id);
+        void setTipo(string tipo);
+        void setNombre(string nombre);
+        void setEstado(bool estado);
+
+        // Métodos
+        void agregarProceso(Proceso* proceso); // Agrega un proceso a la lista de procesos
+        void eliminarProceso(int idProceso); // Elimina un proceso de la lista de procesos
+        void listarProcesos(); // Muestra todos los procesos que se están ejecutando en el sistema
 };

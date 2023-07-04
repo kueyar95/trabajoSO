@@ -7,9 +7,12 @@
 #include<sstream>
 #include <random>
 using namespace std;
+random_device rd;
+mt19937 gen(rd());
 
 AdministradorUsuario::AdministradorUsuario() {
     cargarUltimoId();
+    cargarUsuarios();
 }
 
 void AdministradorUsuario::guardarUltimoId() {
@@ -64,17 +67,35 @@ Usuario* AdministradorUsuario::agregarUsuario(string nombre, string tipo, int ni
         id = ultimoId;
         guardarUltimoId();
     }
-
     // Crear el nuevo usuario con el ID correcto
     Usuario* nuevoUsuario = new Usuario(id, nombre, tipo, nivelAcceso);
     usuariosList.push_back(nuevoUsuario);
+
+    // Guardar el usuario en el archivo
+    if (!cargadoDesdeArchivo) {
+        guardarUsuario(nuevoUsuario);
+    }
+
     return nuevoUsuario;
 }
 
 void AdministradorUsuario::guardarUsuario(Usuario* usuario) {
-    ofstream file("usuarios.txt", ios::app);
-    file << usuario->getId() << "," << usuario->getNombre() << "," << usuario->getTipo() << "," << usuario->getNivelAcceso() << "\n";
+    // Primero, abre el archivo en modo de escritura para sobrescribirlo
+    ofstream file("usuarios.txt", ios::out);
+
+    // Luego, escribe todos los usuarios en el archivo
+    for (Usuario* u : usuariosList) {
+        file << u->getId() << "," << u->getNombre() << "," << u->getTipo() << "," << u->getNivelAcceso() << "\n";
+    }
+
     file.close();
+}
+
+Usuario* AdministradorUsuario::cargarUsuario(string nombre, string tipo, int nivelAcceso, int id) {
+    // Crear el nuevo usuario con el ID correcto
+    Usuario* nuevoUsuario = new Usuario(id, nombre, tipo, nivelAcceso);
+    usuariosList.push_back(nuevoUsuario);
+    return nuevoUsuario;
 }
 
 void AdministradorUsuario::cargarUsuarios() {
@@ -90,7 +111,7 @@ void AdministradorUsuario::cargarUsuarios() {
         getline(ss, nombre, ',');
         getline(ss, tipo, ',');
         ss >> nivelAcceso;
-        agregarUsuario(nombre, tipo, nivelAcceso, true);
+        cargarUsuario(nombre, tipo, nivelAcceso, id);
         if (id > ultimoId) {
             ultimoId = id;
         }
@@ -167,17 +188,15 @@ void AdministradorUsuario::modificarUsuario(int id) {
     }
 }
 
+
 string AdministradorUsuario::generarNombreAleatorio() {
     static const char alphanumerico[] =
         "0123456789"
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         "abcdefghijklmnopqrstuvwxyz";
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, sizeof(alphanumerico) - 2);
-
-    std::string nombre;
+    uniform_int_distribution<> dis(0, sizeof(alphanumerico) - 2);
+    string nombre;
     for (int i = 0; i < 10; ++i) {
         nombre += alphanumerico[dis(gen)];
     }
@@ -187,9 +206,9 @@ string AdministradorUsuario::generarNombreAleatorio() {
 
 void AdministradorUsuario::creacionRapidoUsuario(int cantidad) {
     for (int i = 0; i < cantidad; ++i) {
-        std::string nombre = generarNombreAleatorio(); // Genera un nombre de 10 caracteres
-        std::string tipo = "Tipo" + std::to_string(i % 5); // Genera tipos de usuario aleatorios
-        int nivelAcceso = i % 2; // Genera niveles de acceso aleatorios
+        string nombre = generarNombreAleatorio(); // Genera un nombre de 10 caracteres
+        string tipo = i % 2 == 0 ? "humano" : "maquina";
+        int nivelAcceso = i % 3; // Genera niveles de acceso aleatorios
         agregarUsuario(nombre, tipo, nivelAcceso, false);
     }
 }
