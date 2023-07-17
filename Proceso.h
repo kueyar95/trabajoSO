@@ -1,12 +1,30 @@
-#include<Usuario.h>
+#pragma once
+#include <string>
+#include <vector>
+using namespace std;
 
 class Proceso {
-	public:
-		Proceso(Usuario* usuario, int sistemaId, int recursosRequeridos);
-		void ejecutar();
-		// Otros métodos según sea necesario
-	private:
-		Usuario* usuario; // El usuario que inició el proceso
-		int sistemaId; // ID del sistema en el que se está ejecutando el proceso
-		int recursosRequeridos; // La cantidad de recursos que el proceso necesita para ejecutarse
+    private:
+        int id;
+        string nombre;
+        int idSistema;
+        string estado;
+        vector<string> recursos;
+
+    public:
+        Proceso(int id, string nombre, int idSistema, vector<string> recursos);
+
+        // Getters
+        int getId();
+        string getNombre();
+        int getIdSistema();
+        string getEstado();
+        vector<string> getRecursos();
+
+        // Setters
+        void setId(int id);
+        void setNombre(string nombre);
+        void setIdSistema(int idSistema);
+        void setEstado(string estado);
+        void setRecursos(vector<string> recursos);
 };
