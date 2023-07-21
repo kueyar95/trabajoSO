@@ -13,6 +13,9 @@ string Sistema::getTipo() {
 bool Sistema::getEstado() {
 	return estado;
 }
+double Sistema::getSaldo() {
+	return saldo;
+}
 void Sistema::setId(int id) {
 	this->id = id;
 }
@@ -24,4 +27,7 @@ void Sistema::setNombre(string nombre) {
 }
 void Sistema::setEstado(bool estado) {
 	this->estado = estado;
+}
+void Sistema::setSaldo(double saldo){
+	this->saldo = saldo;
 }

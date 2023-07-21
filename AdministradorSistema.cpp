@@ -181,3 +181,23 @@ void AdministradorSistema::modificarSistema(int id) {
         }
     }
 }
+
+void AdministradorSistema::depositar(Sistema* sistema, double cantidad) {
+    if (sistema != nullptr && cantidad > 0) {
+        double nuevoSaldo = sistema->getSaldo() + cantidad;
+        sistema->setSaldo(nuevoSaldo);
+        cout << "Se han depositado " << cantidad << " al sistema " << sistema->getNombre() << ". Nuevo saldo: " << nuevoSaldo << endl;
+    } else {
+        cout << "Error: Sistema no encontrado o cantidad inválida." << endl;
+    }
+}
+
+void AdministradorSistema::retirar(Sistema* sistema, double cantidad) {
+    if (sistema != nullptr && cantidad > 0 && cantidad <= sistema->getSaldo()) {
+        double nuevoSaldo = sistema->getSaldo() - cantidad;
+        sistema->setSaldo(nuevoSaldo);
+        cout << "Se han retirado " << cantidad << " del sistema " << sistema->getNombre() << ". Nuevo saldo: " << nuevoSaldo << endl;
+    } else {
+        cout << "Error: Sistema no encontrado, cantidad inválida o saldo insuficiente." << endl;
+    }
+}

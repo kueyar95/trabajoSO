@@ -20,6 +20,8 @@ class AdministradorUsuario {
         void cargarUltimoId();
         string generarNombreAleatorio();
         void creacionRapidoUsuario(int cantidad);
+        void depositar(Usuario* usuario, double cantidad); // Deposita dinero en un sistema
+		void retirar(Usuario* usuario, double cantidad); // Retira dinero de un sistema
 
     private:
         vector<Usuario*> usuariosList;

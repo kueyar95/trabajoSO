@@ -9,22 +9,25 @@ class Sistema {
         string tipo; // Tipo de sistema (Banca, Recaudación de impuestos, Sistemas de pago, Sistemas de minado, etc.)
         bool estado; // Estado del sistema (activo o inactivo)
         vector<Proceso*> procesos; // Lista de procesos que se están ejecutando en el sistema
+        double saldo;
 
     public:
         // Constructor
-        Sistema(int id, string nombre, string tipo) : id(id), nombre(nombre), tipo(tipo), estado(true) {}
+        Sistema(int id, string nombre, string tipo) : id(id), nombre(nombre), tipo(tipo), estado(true), saldo(0.0) {}
 
         // Getters
         int getId();
         string getNombre();
         string getTipo();
         bool getEstado();
+        double getSaldo();
 
         // Setters
         void setId(int id);
         void setTipo(string tipo);
         void setNombre(string nombre);
         void setEstado(bool estado);
+        void setSaldo(double saldo);
 
         // Métodos
         void agregarProceso(Proceso* proceso); // Agrega un proceso a la lista de procesos

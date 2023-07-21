@@ -26,4 +26,6 @@ class AdministradorSistema {
 		void guardarSistema(Sistema* sistema); // Guarda un sistema en un archivo
 		void guardarUltimoId(); // Guarda el último ID en un archivo
 		void cargarUltimoId(); // Carga el último ID desde un archivo
+		void depositar(Sistema* sistema, double cantidad); // Deposita dinero en un sistema
+		void retirar(Sistema* sistema, double cantidad); // Retira dinero de un sistema
 };
