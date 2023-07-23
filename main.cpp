@@ -6,8 +6,12 @@
 #include<vector>
 #include <limits>
 #include<fstream>
+#include <random>
+std::random_device rd;  // Definición
+std::mt19937 gen(rd());  // Definición
 #include "AdministradorHardware.h"
 #include "AdministradorUsuario.h"
+#include "AdministradorSistema.h"
 using namespace std;
 
 void menuGeneral();
@@ -99,7 +103,7 @@ void menuGeneralSuperUsuario(){
 	char rpt;
 	do
 	{
-		cout<<"\n\t.:MENU GENERAL:. \n";
+		cout<<"\n\t.:MENU SUPERUSUARIO:. \n";
 		cout<<"1. Administrar Entidades"<<endl;
 		cout<<"2. Administrar Sistemas"<<endl;
 		cout<<"3. Administrar Hardware"<<endl;
@@ -119,8 +123,8 @@ void menuGeneralSuperUsuario(){
 				// system("pause");
 				break;
 			 case 2:
-				// menuSistemas();
-			 	// system("pause");
+				menuSistemas();
+			 	system("pause");
 			 	break;
 			 case 3:
 			 	menuHardware();
@@ -264,65 +268,143 @@ void menuEntidades(){
 	} while (opcion < 9);
 }
 void menuSistemas(){
-	int opcion;
+	AdministradorSistema admSistema;
+	string nombre, tipo;
+	int opcion, opcionTipo, ID;
 	do
 	{
-		// cout<<"\n\t.:MENU SISTEMAS:. \n";
-		// cout<<"1. Creacion rapida de sistema"<<endl;
-		// cout<<"2. Crear nuevo sistema"<<endl;
-		// cout<<"3. Ver todos los sistemas"<<endl;
-		// cout<<"4. Ver sistema"<<endl;
-		// cout<<"5. Eliminar todos los sistemas"<<endl;
-		// cout<<"6. Eliminar sistema"<<endl;
-		// cout<<"7. Modificar sistema"<<endl;
-		// cout<<"8. Atras"<<endl;
-		// cout<<"9. Salir"<<endl;
-		// cout<<"Opcion: "<<endl;
-		// cin>>opcion;
+		cout<<"\n\t.:MENU SISTEMAS:. \n";
+		cout<<"1. Crear nuevo sistema"<<endl;
+		cout<<"2. Ver todos los sistemas"<<endl;
+		cout<<"3. Ver sistema"<<endl;
+		cout<<"4. Eliminar todos los sistemas"<<endl;
+		cout<<"5. Eliminar sistema"<<endl;
+		cout<<"6. Modificar sistema"<<endl;
+		cout<<"7. Depositar saldo en un sistema"<<endl;
+		cout<<"8. Retirar saldo de un sistema"<<endl;
+		cout<<"9. Atrás"<<endl;
+		cout<<"10. Salir"<<endl;
+		cout<<"Opcion: "<<endl;
+		cin>>opcion;
 
-		// switch (opcion)
-		// {
-		// 	case 1:
-		// 		creacionRapidoSistema();
-		// 		system("pause");
-		// 		break;
-		// 	 case 2:
-		// 		crearSistema();
-		// 	 	system("pause");
-		// 	 	break;
-		// 	 case 3:
-		// 	 	verSistemas();
-		// 		system("pause");
-		// 	 	break;
-		// 	case 4:
-		// 		verSistema();
-		// 		system("pause");
-		// 		break;
-		// 	 case 5:
-		// 	 	eliminarSistemas();
-		// 		system("pause");
-		// 	 	break;
-		// 	 case 6:
-		// 	 	eliminarSistema();
-		// 		system("pause");
-		// 	 	break;
-		// 	 case 7:
-		// 	 	modificarSistema();
-		// 		system("pause");
-		// 	 	break;
-		// 	case 8:
-		// 		menuGeneral();
-		// 		system("pause");
-		// 	break;
-		// 	case 9:	break;
-		// }
-		// system("cls");
+		switch (opcion)
+		{
+			case 1:
+				cout << "Ingrese el nombre del sistema: ";
+				cin >> nombre;
+
+				cout << "Seleccione el tipo de sistema que desea agregar:\n";
+				cout << "1. Banca\n";
+				cout << "2. Pagos\n";
+				cout << "3. Impuestos\n";
+				cout << "4. Cancelar\n";
+				cout << "Ingrese el número de su opción: ";
+				cin >> opcionTipo;
+
+				switch(opcionTipo) {
+					case 1:
+						tipo = "Banca";
+						break;
+					case 2:
+						tipo = "Pagos";
+						break;
+					case 3:
+						tipo = "Impuestos";
+						break;
+					case 4:
+						cout << "Operación cancelada.\n";
+						system("pause");
+						return; // Salir del case si el usuario selecciona "Cancelar"
+					default:
+						cout << "Opción no válida. Intente de nuevo.\n";
+						system("pause");
+						return; // Salir del case si el usuario introduce una opción no válida
+				}
+
+				admSistema.agregarSistema(nombre, tipo, false);
+				cout << "Sistema agregado exitosamente.\n";
+				system("pause");
+				break;
+			case 2:
+				admSistema.listarSistemas();;
+			 	system("pause");
+			 	break;
+			case 3:
+				cout << "Ingrese el ID del sistema que desea ver: ";
+				cin >> ID;
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
+			 	admSistema.verSistema(ID);
+				system("pause");
+			 	break;
+			case 4:
+				cout << "Eliminando los sistemas...\n";
+				admSistema.eliminarTodosSistemas();
+				system("pause");
+				break;
+			 case 5:
+				cout << "Ingrese el ID del sistema que desea eliminar: ";
+				cin >> ID;
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
+				admSistema.eliminarSistema(ID);
+				system("pause");
+			 	break;
+			 case 6:
+			 	cout << "Ingrese el ID del sistema que desea modificar: ";
+				cin >> ID;
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
+			 	admSistema.modificarSistema(ID);
+				system("pause");
+			 	break;
+			 case 7:
+			 	int idSistema;
+				double cantidad;
+
+				cout << "Ingrese el ID del sistema al que desea depositar: ";
+				cin >> idSistema;
+
+				cout << "Ingrese la cantidad que desea depositar: ";
+				cin >> cantidad;
+
+				if (cin.fail() || cantidad <= 0) {
+					cout << "Error: Cantidad inválida. Debe ser un número mayor que 0.\n";
+					cin.clear();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
+					system("pause");
+					break;
+				}
+
+				admSistema.depositar(idSistema, cantidad);
+				system("pause");
+				break;
+			case 8:
+				cout << "Ingrese el ID del sistema del que desea retirar: ";
+				cin >> idSistema;
+
+				cout << "Ingrese la cantidad que desea retirar: ";
+				cin >> cantidad;
+
+				if (cin.fail() || cantidad <= 0) {
+					cout << "Error: Cantidad inválida. Debe ser un número mayor que 0.\n";
+					cin.clear();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
+					system("pause");
+					break;
+				}
+
+				admSistema.retirar(idSistema, cantidad);
+				system("pause");
+				break;
+			case 9:
+				menuGeneral();
+			break;
+		}
+		system("cls");
 	} while (opcion < 9);
 }
 void menuHardware(){
 	AdministradorHardware administradorHard;
 	string tipo, modelo, marca;
-    int id, capacidad, almacenamiento, velocidad, opcion;
+    int ID, capacidad, almacenamiento, velocidad, opcion;
 	Hardware* nuevoHardware = nullptr;
 	do
 	{
@@ -365,10 +447,10 @@ void menuHardware(){
 				system("pause");
 			 	break;
 			case 4:
-				cout << "Ingrese el id del hardware que desea eliminar: ";
-				cin >> id;
+				cout << "Ingrese el ID del hardware que desea eliminar: ";
+				cin >> ID;
 				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
-			 	administradorHard.eliminarHardware(id);
+			 	administradorHard.eliminarHardware(ID);
 				system("pause");
 				break;
 			 case 5:
@@ -377,10 +459,10 @@ void menuHardware(){
 				system("pause");
 			 	break;
 			 case 6:
-			 	cout << "Ingrese el id del hardware que desea modificar: ";
-				cin >> id;
+			 	cout << "Ingrese el ID del hardware que desea modificar: ";
+				cin >> ID;
 				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
-			 	administradorHard.modificarHardware(id);
+			 	administradorHard.modificarHardware(ID);
 				system("pause");
 			 	break;
 			 case 7:

@@ -1,8 +1,11 @@
 #pragma once
+#include <random>
 #include <string>
 #include "Usuario.h"
 #include <vector>
 using namespace std;
+extern random_device rd;  // Declaración
+extern mt19937 gen;  // Declaración
 
 class AdministradorUsuario {
     public:

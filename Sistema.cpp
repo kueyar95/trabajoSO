@@ -2,7 +2,7 @@
 using namespace std;
 
 int Sistema::getId() {
-	return id;
+	return ID;
 }
 string Sistema::getNombre() {
 	return nombre;
@@ -16,8 +16,11 @@ bool Sistema::getEstado() {
 double Sistema::getSaldo() {
 	return saldo;
 }
-void Sistema::setId(int id) {
-	this->id = id;
+string Sistema::getIp() {
+	return IP;
+}
+void Sistema::setId(int ID) {
+	this->ID = ID;
 }
 void Sistema::setTipo(string tipo) {
 	this->tipo = tipo;
@@ -30,4 +33,7 @@ void Sistema::setEstado(bool estado) {
 }
 void Sistema::setSaldo(double saldo){
 	this->saldo = saldo;
+}
+void Sistema::setIp(string ip) {
+	this->IP = IP;
 }

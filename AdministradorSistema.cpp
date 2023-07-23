@@ -7,28 +7,76 @@
 #include<sstream>
 #include <random>
 using namespace std;
-random_device rd;
-mt19937 gen(rd());
-
 AdministradorSistema::AdministradorSistema() {
-    cargarUltimoId();
+    ultimoId = 0;  // Inicializa ultimoId con 0
+    ultimoIP = "0.0.0.0";  // Inicializa ultimoIP con "0.0.0.0"
     cargarSistemas();
+    cargarUltimoId();
+    cargarUltimoIp();
 }
 
 void AdministradorSistema::guardarUltimoId() {
+    bool idFound = false;
     vector<string> lines;
     string line, tipo;
-    int id;
+    int ID;
 
     // Leer el archivo y guardar todas las líneas en un vector
     ifstream fileRead("ultimoId.txt");
     while (getline(fileRead, line)) {
         stringstream ss(line);
         getline(ss, tipo, ',');
-        ss >> id;
-        if (tipo == "Sistema") {
+        ss >> ID;
+        if (tipo == "SistemaID") {
             // Reemplazar la línea que corresponde al tipo de ID que estás actualizando
-            line = "Sistema," + to_string(ultimoId);
+            line = "SistemaID," + to_string(ultimoId);
+            idFound = true;
+        }
+        lines.push_back(line);
+    }
+    fileRead.close();
+
+    // Si no se encontró el ID, añadirlo al final
+    if (!idFound) {
+        lines.push_back("SistemaID," + to_string(ultimoId));
+    }
+
+    // Sobrescribir el archivo con las líneas actualizadas
+    ofstream fileWrite("ultimoId.txt", ios::out);
+    for (const string& line : lines) {
+        fileWrite << line << "\n";
+    }
+    fileWrite.close();
+}
+
+void AdministradorSistema::cargarUltimoId() {
+    ifstream file("ultimoId.txt");
+    string line, tipo;
+    int ID;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        getline(ss, tipo, ',');
+        ss >> ID;
+        if (tipo == "SistemaID") {
+            ultimoId = ID;
+        }
+    }
+    file.close();
+}
+void AdministradorSistema::guardarUltimoIp(){
+    vector<string> lines;
+    string line, tipo;
+    string IP;
+
+    // Leer el archivo y guardar todas las líneas en un vector
+    ifstream fileRead("ultimoId.txt");
+    while (getline(fileRead, line)) {
+        stringstream ss(line);
+        getline(ss, tipo, ',');
+        getline(ss, IP);
+        if (tipo == "SistemaIP") {
+            // Reemplazar la línea que corresponde al tipo de IP que estás actualizando
+            line = "SistemaIP," + ultimoIP;
         }
         lines.push_back(line);
     }
@@ -42,34 +90,40 @@ void AdministradorSistema::guardarUltimoId() {
     fileWrite.close();
 }
 
-void AdministradorSistema::cargarUltimoId() {
+void AdministradorSistema::cargarUltimoIp(){
     ifstream file("ultimoId.txt");
     string line, tipo;
-    int id;
+    string IP;
     while (getline(file, line)) {
         stringstream ss(line);
         getline(ss, tipo, ',');
-        ss >> id;
-        if (tipo == "Sistema") {
-            ultimoId = id;
+        getline(ss, IP);
+        if (tipo == "SistemaIP") {
+            ultimoIP = IP;
         }
     }
     file.close();
 }
 
 Sistema* AdministradorSistema::agregarSistema(string nombre, string tipo, bool cargadoDesdeArchivo = false) {
-    int id;
+    int ID;
+    string IP;
     if (cargadoDesdeArchivo) {
         // Si el sistema está siendo cargado desde un archivo, usa el último ID que ya has leído
-        id = ultimoId;
+        ID = ultimoId;
+        IP = ultimoIP;
+
     } else {
-        // Si el sistema no está siendo cargado desde un archivo, incrementa el último ID y guárdalo
+        // Si el sistema no está siendo cargado desde un archivo, incrementa el último ID y IP y guárdalos
         ultimoId++;
-        id = ultimoId;
+        ID = ultimoId;
         guardarUltimoId();
+        IP = generarIpUnica();
+        ultimoIP = IP;
+        guardarUltimoIp();
     }
     // Crear el nuevo sistema con el ID correcto
-    Sistema* nuevoSistema = new Sistema(id, nombre, tipo);
+    Sistema* nuevoSistema = new Sistema(ID, nombre, tipo, IP);
     sistemasList.push_back(nuevoSistema);
 
     // Guardar el sistema en el archivo
@@ -86,34 +140,36 @@ void AdministradorSistema::guardarSistema(Sistema* sistema) {
 
     // Luego, escribe todos los sistemas en el archivo
     for (Sistema* s : sistemasList) {
-        file << s->getId() << "," << s->getNombre() << "," << s->getTipo() << "\n";
+        file << s->getId() << "," << s->getNombre() << "," << s->getTipo() << "," << s->getIp() << "\n";
     }
 
     file.close();
 }
 
-Sistema* AdministradorSistema::cargarSistema(string nombre, string tipo, int id) {
-    // Crear el nuevo sistema con el ID correcto
-    Sistema* nuevoSistema = new Sistema(id, nombre, tipo);
+Sistema* AdministradorSistema::cargarSistema(int ID, string nombre, string tipo, string IP) {
+    // Crear el nuevo sistema con el ID y IP correctos
+    Sistema* nuevoSistema = new Sistema(ID, nombre, tipo, IP);
     sistemasList.push_back(nuevoSistema);
     return nuevoSistema;
 }
 
 void AdministradorSistema::cargarSistemas() {
     ifstream file("sistemas.txt");
-    int id;
-    string nombre, tipo;
+    int ID;
+    string nombre, tipo, IP;
 
     string line;
     while (getline(file, line)) {
         stringstream ss(line);
-        ss >> id;
+        ss >> ID;
         ss.ignore(1, ',');
         getline(ss, nombre, ',');
         getline(ss, tipo, ',');
-        cargarSistema(nombre, tipo, id);
-        if (id > ultimoId) {
-            ultimoId = id;
+        getline(ss, IP, ',');
+        cargarSistema(ID, nombre, tipo, IP);
+        if (ID > ultimoId) {
+            ultimoId = ID;
+            ultimoIP = IP;
         }
     }
 
@@ -128,18 +184,18 @@ void AdministradorSistema::listarSistemas() {
     }
 }
 
-Sistema* AdministradorSistema::buscarSistema(string nombreSistema){
+Sistema* AdministradorSistema::verSistema(int ID){
     for (Sistema* sistema : sistemasList) {
-        if (sistema->getNombre() == nombreSistema) {
+        if (sistema->getId() == ID) {
             return sistema;
         }
     }
     return nullptr;  // Devuelve nullptr si no se encuentra el sistema
 }
 
-void AdministradorSistema::eliminarSistema(int id) {
+void AdministradorSistema::eliminarSistema(int ID) {
     for (auto it = sistemasList.begin(); it != sistemasList.end(); ++it) {
-        if ((*it)->getId() == id) {
+        if ((*it)->getId() == ID) {
             delete *it;
             sistemasList.erase(it);
             break;
@@ -162,9 +218,9 @@ void AdministradorSistema::eliminarTodosSistemas() {
     cout<<"Todos los sistemas han sido eliminados exitosamente"<<endl;
 }
 
-void AdministradorSistema::modificarSistema(int id) {
+void AdministradorSistema::modificarSistema(int ID) {
     for (Sistema* sistema : sistemasList) {
-        if (sistema->getId() == id) {
+        if (sistema->getId() == ID) {
             string nuevoNombre, nuevoTipo;
             cout << "Ingrese el nuevo nombre (deje en blanco para no cambiar): ";
             getline(cin, nuevoNombre);
@@ -182,7 +238,8 @@ void AdministradorSistema::modificarSistema(int id) {
     }
 }
 
-void AdministradorSistema::depositar(Sistema* sistema, double cantidad) {
+void AdministradorSistema::depositar(int idSistema, double cantidad) {
+    Sistema* sistema = buscarSistemaPorId(idSistema);
     if (sistema != nullptr && cantidad > 0) {
         double nuevoSaldo = sistema->getSaldo() + cantidad;
         sistema->setSaldo(nuevoSaldo);
@@ -192,7 +249,8 @@ void AdministradorSistema::depositar(Sistema* sistema, double cantidad) {
     }
 }
 
-void AdministradorSistema::retirar(Sistema* sistema, double cantidad) {
+void AdministradorSistema::retirar(int idSistema, double cantidad) {
+    Sistema* sistema = buscarSistemaPorId(idSistema);
     if (sistema != nullptr && cantidad > 0 && cantidad <= sistema->getSaldo()) {
         double nuevoSaldo = sistema->getSaldo() - cantidad;
         sistema->setSaldo(nuevoSaldo);
@@ -200,4 +258,30 @@ void AdministradorSistema::retirar(Sistema* sistema, double cantidad) {
     } else {
         cout << "Error: Sistema no encontrado, cantidad inválida o saldo insuficiente." << endl;
     }
+}
+
+string AdministradorSistema::generarIpUnica() {
+    string IP;
+    bool ipUnica = false;
+    while (!ipUnica) {
+        IP = to_string(rand() % 256) + "." + to_string(rand() % 256) + "." + to_string(rand() % 256) + "." + to_string(rand() % 256);
+        ipUnica = true;
+        for (Sistema* sistema : sistemasList) {
+            if (sistema->getIp() == IP) {
+                ipUnica = false;
+                break;
+            }
+        }
+    }
+    return IP;
+}
+
+Sistema* AdministradorSistema::buscarSistemaPorId(int idSistema){
+    for (Sistema* sistema : sistemasList) {
+        if (sistema->getId() == idSistema) {
+            return sistema;
+        }
+    }
+    cout << "Error: No se encontró un sistema con el ID " << idSistema << ".\n";
+    return nullptr;  // Devuelve nullptr si no se encuentra el sistema
 }
