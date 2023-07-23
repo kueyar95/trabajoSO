@@ -1,7 +1,7 @@
 #pragma once
-#include <string>
-#include <vector>
-#include "Proceso.h"
+#include<string>
+#include<vector>
+#include"Proceso.h"
 using namespace std;
 
 class AdministradorProcesos {

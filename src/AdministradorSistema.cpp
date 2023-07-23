@@ -1,11 +1,11 @@
 // AdministradorSistema.cpp
-#include "AdministradorSistema.h"
-#include <iomanip>
+#include"../include/AdministradorSistema.h"
+#include<iomanip>
 #include<vector>
 #include<fstream>
 #include<iostream>
 #include<sstream>
-#include <random>
+#include<random>
 using namespace std;
 AdministradorSistema::AdministradorSistema() {
     ultimoId = 0;  // Inicializa ultimoId con 0

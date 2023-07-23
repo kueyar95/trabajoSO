@@ -1,6 +1,7 @@
-#include "Proceso.h"
+#include"../include/Proceso.h"
 
-Proceso::Proceso(int id, string nombre, int idSistema, vector<string> recursos) {
+Proceso::Proceso(int id, string nombre, vector<string> recursos, function<void()> funcion, int nivelPrivilegioRequerido)
+    : id(id), nombre(nombre), recursos(recursos), funcion(funcion), nivelPrivilegioRequerido(nivelPrivilegioRequerido) {
     this->id = id;
     this->nombre = nombre;
     this->idSistema = idSistema;
@@ -17,10 +18,6 @@ string Proceso::getNombre() {
     return this->nombre;
 }
 
-int Proceso::getIdSistema() {
-    return this->idSistema;
-}
-
 string Proceso::getEstado() {
     return this->estado;
 }
@@ -28,6 +25,15 @@ string Proceso::getEstado() {
 vector<string> Proceso::getRecursos() {
     return this->recursos;
 }
+
+function<void()> Proceso::getFuncion() {
+    return this->funcion;
+}
+
+int Proceso::getNivelPrivilegioRequerido() {
+    return this->nivelPrivilegioRequerido;
+}
+
 
 // Setters
 void Proceso::setId(int id) {
@@ -38,14 +44,16 @@ void Proceso::setNombre(string nombre) {
     this->nombre = nombre;
 }
 
-void Proceso::setIdSistema(int idSistema) {
-    this->idSistema = idSistema;
-}
-
 void Proceso::setEstado(string estado) {
     this->estado = estado;
 }
 
 void Proceso::setRecursos(vector<string> recursos) {
     this->recursos = recursos;
+}
+void Proceso::setFuncion(function<void()> funcion) {
+    this->funcion = funcion;
+}
+void Proceso::setNivelPrivilegioRequerido(int nivelPrivilegioRequerido) {
+    this->nivelPrivilegioRequerido = nivelPrivilegioRequerido;
 }

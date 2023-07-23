@@ -1,17 +1,17 @@
-#include <string>
+#include<string>
 #include<iostream>
 #include<conio.h>
 #include<stdlib.h>
-#include "Hardware.h"
+#include"./include/Hardware.h"
 #include<vector>
-#include <limits>
+#include<limits>
 #include<fstream>
-#include <random>
-std::random_device rd;  // Definición
-std::mt19937 gen(rd());  // Definición
-#include "AdministradorHardware.h"
-#include "AdministradorUsuario.h"
-#include "AdministradorSistema.h"
+#include<random>
+random_device rd;  // Definición
+mt19937 gen(rd());  // Definición
+#include"./include/AdministradorHardware.h"
+#include"./include/AdministradorUsuario.h"
+#include"./include/AdministradorSistema.h"
 using namespace std;
 
 void menuGeneral();

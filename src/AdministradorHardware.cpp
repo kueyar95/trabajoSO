@@ -1,6 +1,6 @@
 #include<string>
-#include"Hardware.h"
-#include"AdministradorHardware.h"
+#include"../include/Hardware.h"
+#include"../include/AdministradorHardware.h"
 #include<iomanip>
 #include<vector>
 #include<fstream>

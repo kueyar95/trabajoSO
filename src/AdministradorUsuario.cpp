@@ -1,11 +1,13 @@
 // AdministradorUsuario.cpp
-#include "AdministradorUsuario.h"
-#include <iomanip>
+#include"../include/AdministradorUsuario.h"
+#include<iomanip>
 #include<vector>
 #include<fstream>
 #include<iostream>
 #include<sstream>
-#include <random>
+#include<random>
+extern random_device rd;  // Declaración
+extern mt19937 gen;  // Declaración
 using namespace std;
 
 AdministradorUsuario::AdministradorUsuario() {

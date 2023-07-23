@@ -1,4 +1,4 @@
-#include "Sistema.h"
+#include"../include/Sistema.h"
 using namespace std;
 
 int Sistema::getId() {
