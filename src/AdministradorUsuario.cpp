@@ -6,9 +6,9 @@
 #include<iostream>
 #include<sstream>
 #include<random>
-extern random_device rd;  // Declaración
-extern mt19937 gen;  // Declaración
 using namespace std;
+random_device rd;  // Declaración
+mt19937 gen;  // Declaración
 
 AdministradorUsuario::AdministradorUsuario() {
     cargarUltimoId();
@@ -128,7 +128,16 @@ void AdministradorUsuario::verUsuarios() {
     }
 }
 
-Usuario* AdministradorUsuario::buscarUsuario(string nombreUsuario){
+Usuario* AdministradorUsuario::buscarUsuario(int idUsuario){
+    for (Usuario* usuario : usuariosList) {
+        if (usuario->getId() == idUsuario) {
+            return usuario;
+        }
+    }
+    return nullptr;  // Devuelve nullptr si no se encuentra el usuario
+}
+
+Usuario* AdministradorUsuario::buscarUsuarioPorNombre(string nombreUsuario){
     for (Usuario* usuario : usuariosList) {
         if (usuario->getNombre() == nombreUsuario) {
             return usuario;

@@ -16,7 +16,6 @@ class AdministradorSistema {
 	public:
 		// Constructor
 		AdministradorSistema();
-
 		// Métodos
 		Sistema* agregarSistema(string nombre, string tipo, bool cargadoDesdeArchivo); // Crea un nuevo sistema y lo agrega a la lista
 		void eliminarSistema(int ID); // Elimina un sistema de la lista

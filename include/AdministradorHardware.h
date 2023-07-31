@@ -8,6 +8,10 @@ using namespace std;
 
 
 class AdministradorHardware {
+	private:
+		vector<Hardware*> hardwareList;
+		int ultimoId;
+
 	public:
 		AdministradorHardware();
 		Hardware* agregarHardware(string tipo, string marca, string modelo, int capacidad, int velocidad, bool cargadoDesdeArchivo);
@@ -19,8 +23,4 @@ class AdministradorHardware {
 		void modificarHardware(int id);
 		void guardarUltimoId();
 		void cargarUltimoId();
-		// Otros métodos según sea necesario
-	private:
-		vector<Hardware*> hardwareList;
-		int ultimoId;
 };

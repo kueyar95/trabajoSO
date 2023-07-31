@@ -12,7 +12,6 @@ class Entidad {
 		bool estado;
 	public:
 		Entidad(int ID, string nombre, bool estado, string IP);
-		~Entidad();
 
 		// Getters
 		int getID();

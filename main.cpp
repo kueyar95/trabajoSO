@@ -7,12 +7,14 @@
 #include<limits>
 #include<fstream>
 #include<random>
-random_device rd;  // Definición
-mt19937 gen(rd());  // Definición
 #include"./include/AdministradorHardware.h"
 #include"./include/AdministradorUsuario.h"
 #include"./include/AdministradorSistema.h"
+#include"./include/Logger.h"
 using namespace std;
+// Instancia un objeto Logger global
+Logger logger("log.txt");
+
 
 void menuGeneral();
 void menuGeneralSuperUsuario();
@@ -48,7 +50,7 @@ int iniciarSesion() {
             usuario = new Usuario(0, "Invitado", "Usuario", 0);
             return usuario->getNivelAcceso();
         } else {
-            usuario = adminUsuario.buscarUsuario(nombreUsuario);
+            usuario = adminUsuario.buscarUsuarioPorNombre(nombreUsuario);
             if (usuario == nullptr) {
                 cout << "Usuario no encontrado." << endl;
                 cout << "1. Intentar de nuevo" << endl;
@@ -323,10 +325,12 @@ void menuSistemas(){
 
 				admSistema.agregarSistema(nombre, tipo, false);
 				cout << "Sistema agregado exitosamente.\n";
+        		logger.log("Se ha agregado el sistema '" + nombre + "', de tipo '" + tipo + "'.", LogType::INFO);
 				system("pause");
 				break;
 			case 2:
-				admSistema.listarSistemas();;
+				admSistema.listarSistemas();
+				logger.log("Se ha listado todos los sistemas.", LogType::INFO);
 			 	system("pause");
 			 	break;
 			case 3:
@@ -334,11 +338,13 @@ void menuSistemas(){
 				cin >> ID;
 				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
 			 	admSistema.verSistema(ID);
+				logger.log("Se ha visualizado el sistema con ID: " + std::to_string(ID) + ".", LogType::INFO);
 				system("pause");
 			 	break;
 			case 4:
 				cout << "Eliminando los sistemas...\n";
 				admSistema.eliminarTodosSistemas();
+				logger.log("Se han eliminado todos los sistemas.", LogType::WARNING);
 				system("pause");
 				break;
 			 case 5:
@@ -346,6 +352,7 @@ void menuSistemas(){
 				cin >> ID;
 				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
 				admSistema.eliminarSistema(ID);
+				logger.log("Se ha eliminado el sistema con ID: " + std::to_string(ID) + ".", LogType::WARNING);
 				system("pause");
 			 	break;
 			 case 6:
@@ -353,6 +360,7 @@ void menuSistemas(){
 				cin >> ID;
 				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta el salto de línea en el búfer de entrada
 			 	admSistema.modificarSistema(ID);
+				logger.log("Se ha modificado el sistema con ID: " + std::to_string(ID) + ".", LogType::INFO);
 				system("pause");
 			 	break;
 			 case 7:
@@ -374,6 +382,7 @@ void menuSistemas(){
 				}
 
 				admSistema.depositar(idSistema, cantidad);
+				logger.log("Se ha depositado " + std::to_string(cantidad) + " en el sistema con ID: " + std::to_string(idSistema) + ".", LogType::INFO);
 				system("pause");
 				break;
 			case 8:
@@ -392,10 +401,12 @@ void menuSistemas(){
 				}
 
 				admSistema.retirar(idSistema, cantidad);
+				logger.log("Se ha retirado " + std::to_string(cantidad) + " del sistema con ID: " + std::to_string(idSistema) + ".", LogType::INFO);
 				system("pause");
 				break;
 			case 9:
 				menuGeneral();
+				logger.log("Se ha vuelto al menú general.", LogType::INFO);
 			break;
 		}
 		system("cls");
@@ -509,6 +520,7 @@ void menuUsuarios(){
 			 	cout<<"Ingrese el nivel de acceso del usuario: "<<endl;
 				cin >>nivelAcceso;
 				admUsuario.agregarUsuario(nombre, tipo, nivelAcceso, false);
+				
 			 	system("pause");
 			 	break;
 			 case 3:
@@ -518,7 +530,7 @@ void menuUsuarios(){
 			case 4:
 				cout<<"Ingrese el nombre del usuario: "<<endl;
 				getline(cin, nombre);
-				admUsuario.buscarUsuario(nombre);
+				admUsuario.buscarUsuarioPorNombre(nombre);
 				system("pause");
 				break;
 			 case 5:

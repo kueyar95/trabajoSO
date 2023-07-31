@@ -2,12 +2,14 @@
 #include"../include/AdministradorSistema.h"
 #include <iomanip>
 #include <vector>
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-
+#include"../include/AdministradorUsuario.h"
 using namespace std;
-
+AdministradorUsuario admUsuario;
+AdministradorSistema admSistema;
 AdministradorEntidad::AdministradorEntidad() {
     cargarUltimoId();
     cargarEntidades();
@@ -24,9 +26,9 @@ void AdministradorEntidad::guardarUltimoId() {
         stringstream ss(line);
         getline(ss, tipo, ',');
         ss >> id;
-        if (tipo == "Entidad") {
+        if (tipo == "EntidadID") {
             // Reemplazar la línea que corresponde al tipo de ID que estás actualizando
-            line = "Entidad," + to_string(ultimoId);
+            line = "EntidadID," + to_string(ultimoId);
         }
         lines.push_back(line);
     }
@@ -48,8 +50,50 @@ void AdministradorEntidad::cargarUltimoId() {
         stringstream ss(line);
         getline(ss, tipo, ',');
         ss >> id;
-        if (tipo == "Entidad") {
+        if (tipo == "EntidadID") {
             ultimoId = id;
+        }
+    }
+    file.close();
+}
+
+void AdministradorEntidad::guardarUltimoIp(){
+    vector<string> lines;
+    string line, tipo;
+    string IP;
+
+    // Leer el archivo y guardar todas las líneas en un vector
+    ifstream fileRead("ultimoId.txt");
+    while (getline(fileRead, line)) {
+        stringstream ss(line);
+        getline(ss, tipo, ',');
+        getline(ss, IP);
+        if (tipo == "EntidadIP") {
+            // Reemplazar la línea que corresponde al tipo de IP que estás actualizando
+            line = "EntidadIP," + ultimoIP;
+        }
+        lines.push_back(line);
+    }
+    fileRead.close();
+
+    // Sobrescribir el archivo con las líneas actualizadas
+    ofstream fileWrite("ultimoId.txt", ios::out);
+    for (const string& line : lines) {
+        fileWrite << line << "\n";
+    }
+    fileWrite.close();
+}
+
+void AdministradorEntidad::cargarUltimoIp(){
+    ifstream file("ultimoId.txt");
+    string line, tipo;
+    string IP;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        getline(ss, tipo, ',');
+        getline(ss, IP);
+        if (tipo == "EntidadIP") {
+            ultimoIP = IP;
         }
     }
     file.close();
@@ -129,9 +173,9 @@ void AdministradorEntidad::listarEntidades() {
     }
 }
 
-Entidad* AdministradorEntidad::buscarEntidad(string nombreEntidad){
+Entidad* AdministradorEntidad::buscarEntidad(int idEntidad){
     for (Entidad* entidad : entidadesList) {
-        if (entidad->getNombre() == nombreEntidad) {
+        if (entidad->getID() == idEntidad) {
             return entidad;
         }
     }
@@ -144,6 +188,66 @@ void AdministradorEntidad::eliminarEntidad(string nombreEntidad) {
             delete *it;
             entidadesList.erase(it);
             break;
+        }
+    }
+}
+
+void AdministradorEntidad::asignarUsuarioAEntidad(int idUsuario, int idEntidad) {
+    Usuario* usuario = admUsuario.buscarUsuario(idUsuario);
+    Entidad* entidad = buscarEntidad(idEntidad);
+    if (usuario != nullptr && entidad != nullptr) {
+        vector<Usuario*> usuarios = entidad->getUsuarios();
+        usuarios.push_back(usuario);
+        entidad->setUsuarios(usuarios);
+    }
+}
+
+void AdministradorEntidad::eliminarUsuarioDeEntidad(int idUsuario, int idEntidad) {
+    Usuario* usuario = admUsuario.buscarUsuario(idUsuario);
+    Entidad* entidad = buscarEntidad(idEntidad);
+    if (usuario != nullptr && entidad != nullptr) {
+        vector<Usuario*> usuarios = entidad->getUsuarios();
+        usuarios.erase(remove(usuarios.begin(), usuarios.end(), usuario), usuarios.end());
+        entidad->setUsuarios(usuarios);
+    }
+}
+
+void AdministradorEntidad::listarUsuariosDeEntidad(int idEntidad) {
+    Entidad* entidad = buscarEntidad(idEntidad);
+    if (entidad != nullptr) {
+        vector<Usuario*> usuarios = entidad->getUsuarios();
+        for (Usuario* usuario : usuarios) {
+            cout << usuario->getNombre() << endl;
+        }
+    }
+}
+
+void AdministradorEntidad::agregarSistemaAEntidad(int idEntidad, int idSistema) {
+    Entidad* entidad = buscarEntidad(idEntidad);
+    Sistema* sistema = admSistema.buscarSistemaPorId(idSistema);
+    if (entidad != nullptr && sistema != nullptr) {
+        vector<Sistema*> sistemas = entidad->getSistemas();
+        sistemas.push_back(sistema);
+        entidad->setSistemas(sistemas);
+    }
+}
+
+void AdministradorEntidad::eliminarSistemaDeEntidad(int idEntidad, int idSistema) {
+    Entidad* entidad = buscarEntidad(idEntidad);
+    Sistema* sistema = admSistema.buscarSistemaPorId(idSistema);
+    if (entidad != nullptr && sistema != nullptr) {
+        vector<Sistema*> sistemas = entidad->getSistemas();
+        sistemas.erase(remove(sistemas.begin(), sistemas.end(), sistema), sistemas.end());
+        entidad->setSistemas(sistemas);
+    }
+}
+
+void AdministradorEntidad::listarSistemasDeEntidad(int idEntidad) {
+    Entidad* entidad = buscarEntidad(idEntidad);
+    if (entidad != nullptr) {
+        vector<Sistema*> sistemas = entidad->getSistemas();
+        for (Sistema* sistema : sistemas) {
+            cout << sistema->getId() << endl;
         }
     }
 }
